@@ -1,0 +1,75 @@
+ispconfig_letsencrypt_standalone: 'n'
+ispconfig_ispconfig_admin_password: admin
+
+ispconfig_install_dir: /root/ispconfig3_install
+ispconfig_autoinstall_ini: "{{ ispconfig_install_dir }}/install/autoinstall.ini"
+ispconfig_security_ini: "{{ ispconfig_install_dir }}/security/security_settings.ini"
+
+ispconfig_sha256sum: 881f1ce32967539d362a388191d7f95a3f8db1730198adfeccb513d10651d108
+ispconfig_file: /root/ISPConfig-3-stable.tar.gz
+ispconfig_url: 'https://sourceforge.net/projects/ispconfig/files/ISPConfig%203/ISPConfig-3.1.6/ISPConfig-3.1.6.tar.gz/download'
+
+jailkit_url: 'http://olivier.sessink.nl/jailkit/jailkit-2.19.tar.gz'
+jailkit_file: /root/jailkit.tar.gz
+jailkit_sha256sum: fd9612dd57f4a39abfcde647c420616c5ca37f5982b8c07a8fb5cb352494fc88
+
+# install
+ispconfig_language: en
+ispconfig_install_mode: expert
+ispconfig_hostname: '{{ ansible_fqdn }}'
+ispconfig_mysql_hostname: localhost
+ispconfig_mysql_port: 3306
+ispconfig_mysql_root_user: root
+ispconfig_mysql_root_password: root
+ispconfig_mysql_database: dbispconfig
+ispconfig_mysql_charset: utf8
+ispconfig_http_server: apache
+ispconfig_ispconfig_port: 8080
+ispconfig_ispconfig_use_ssl: 'y'
+
+# ssl_cert
+ispconfig_ssl_cert_country: AR
+ispconfig_ssl_cert_state: Ciudad Autónoma de Buenos Aires
+ispconfig_ssl_cert_locality: Ciudad Autónoma de Buenos Aires
+ispconfig_ssl_cert_organisation: example.org
+ispconfig_ssl_cert_organisation_unit: example.org
+ispconfig_ssl_cert_common_name: '{{ ansible_fqdn }}'
+ispconfig_ssl_cert_email: example@example.org
+
+# expert
+ispconfig_mysql_ispconfig_user: ispconfig
+ispconfig_mysql_ispconfig_password: ispconfig
+ispconfig_mysql_master_hostname: '{{ master_hostname }}'
+ispconfig_mysql_master_root_user: ispconfig
+ispconfig_mysql_master_root_password: ispconfig
+ispconfig_mysql_master_database: dbispconfig
+ispconfig_join_multiserver_setup: 'y'
+ispconfig_install_web_interface: 'n'
+ispconfig_configure_apache: 'n'
+ispconfig_configure_dns: 'n'
+ispconfig_configure_firewall: 'n'
+ispconfig_configure_ftp: 'n'
+ispconfig_configure_jailkit: 'n'
+ispconfig_configure_mail: 'n'
+ispconfig_configure_nginx: 'n'
+
+# update
+ispconfig_do_backup: 'yes'
+ispconfig_reconfigure_permissions_in_master_database: 'no'
+ispconfig_reconfigure_services: 'yes'
+ispconfig_create_new_ispconfig_ssl_cert: 'no'
+ispconfig_reconfigure_crontab: 'yes'
+
+ispconfig_config_inc_php:
+  - regexp: ^?conf\['db_host'\] =
+    line: "$conf['db_host'] = 'localhost';"
+  - regexp: ^?conf\['db_database'\] =
+    line: "$conf['db_database'] = '{{ ispconfig_mysql_database }}';"
+  - regexp: ^?conf\['db_user'\] =
+    line: "$conf['db_user'] = '{{ ispconfig_mysql_ispconfig_user }}';"
+  - regexp: ^?conf\['db_password'\] =
+    line: "$conf['db_password'] = '{{ ispconfig_mysql_ispconfig_password }};'"
+  - regexp: ^?conf\['dbmaster_host'\] =
+    line: "$conf['dbmaster_host'] = '{{ ispconfig_mysql_master_hostname }}';"
+  - regexp: ^?conf\['dbmaster_database'\] =
+    line: "$conf['dbmaster_database'] = '{{ ispconfig_mysql_master_database }}';"

@@ -1,0 +1,19 @@
+---
+dependencies:
+  - gcoop-libre.ispconfig-base
+  - gcoop-libre.ispconfig-web
+  - gcoop-libre.ispconfig-mail
+
+galaxy_info:
+  author: Osiris Alejandro Gomez
+  description: Ansible role for install and configure a ISPConfig Multiserver
+  company: gcoop Cooperativa de Software Libre
+  license: GPLv3
+  min_ansible_version: 2.2
+  platforms:
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags:
+    - ispconfig
+    - web

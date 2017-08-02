@@ -1,0 +1,8 @@
+[masterserver]
+isp-test-web01
+
+[webservers]
+isp-test-web01
+
+[mailservers]
+isp-test-mail01

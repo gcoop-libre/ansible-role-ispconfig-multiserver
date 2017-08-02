@@ -1,0 +1,57 @@
+---
+
+- command: bash -c 'test -e {{ ispconfig_file }}'
+  register: ispconfig_tar
+  ignore_errors: True
+
+- command: bash -c 'test -d {{ ispconfig_install_dir }}/install'
+  register: ispconfig_dir
+  ignore_errors: True
+
+- command: bash -c 'test -e /usr/local/ispconfig/interface/lib/config.inc.php'
+  register: ispconfig_installed
+  ignore_errors: True
+
+- name: Get ISPConfig
+  get_url:
+    url: "{{ ispconfig_url }}"
+    dest: "{{ ispconfig_file }}"
+    sha256sum: "{{ ispconfig_sha256sum }}"
+  when: ispconfig_tar|failed
+
+- name: Untar ISPConfig
+  unarchive:
+    src: "{{ ispconfig_file }}"
+    copy: false
+    dest: /tmp
+  when: ispconfig_dir|failed
+
+- name: Copy autoinstall.ini
+  template:
+    src: templates/autoinstall.ini.j2
+    dest: "{{ ispconfig_autoinstall_ini }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: ispconfig_installed|failed
+
+- name: Copy security_settings.ini
+  template:
+    src: templates/security_settings.ini.j2
+    dest: "{{ ispconfig_security_ini }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: ispconfig_installed|failed
+
+- name: Verify permissions /var/run/mysqld
+  file:
+    path: /var/run/mysqld
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: '0755'
+
+- name: Install ISPConfig
+  command: bash -c 'cd {{ ispconfig_install_dir }}/install && php install.php --autoinstall=autoinstall.ini | tee -i autoinstall.log'
+  when: ispconfig_installed|failed

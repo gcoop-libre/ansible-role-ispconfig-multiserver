@@ -1,0 +1,17 @@
+---
+- hosts: [masterserver]
+  remote_user: debian
+  roles:
+    - role: gcoop-libre.ispconfig-multiserver
+      ispconfig_master_hostname: isp-test-web01
+      ispconfig_configure_apache: y
+      ispconfig_join_multiserver_setup: n
+      ispconfig_install_web_interface: y
+
+- hosts: [mailservers]
+  remote_user: debian
+  roles:
+    - role: gcoop-libre.ispconfig-multiserver
+      ispconfig_master_hostname: isp-test-web01
+      ispconfig_configure_mail: y
+      ispconfig_mysql_master_root_password: root
